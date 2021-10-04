@@ -10,8 +10,8 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - ./dbscripts/1.sql:/docker-entrypoint-initdb.d/1.sql
-      - ./dbscripts/2.sql:/docker-entrypoint-initdb.d/2.sql
+      - ./dbscripts/create_tables.sql:/docker-entrypoint-initdb.d/create_tables.sql
+      - ./dbscripts/fill_tables.sql:/docker-entrypoint-initdb.d/fill_tables.sql
     environment:
       POSTGRES_DB: "postgres"
       POSTGRES_USER:  "energy"
