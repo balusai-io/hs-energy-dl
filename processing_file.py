@@ -1,19 +1,20 @@
 import pandas as pd
 
 
+file_path = 'C:/Users/DHEERAJ/PycharmProjects/hs-energy-dl/data/heb_oil.csv'
+
+
 def pandas_processing():
-    read_file = pd.read_csv('heb_oil.csv')
-    # dropping column and rows having null values
-    filenull_drop_col = read_file.drop('Unnamed: 5', axis=1)
-    filenull_drop_row = filenull_drop_col.dropna(how='any', axis=0)
-    # un pivotizing dataframe to change rows to column i.e. change shape of dataframe
-    unpivot_df = pd.melt(filenull_drop_row, id_vars=["well_name", "month"], var_name="commodity")
-    structured_df = unpivot_df.sort_values(by=["well_name", "month"])
-    # converting unit 103m3 to km3
-    structured_df['commodity'] = [i.replace('103', 'k') for i in structured_df['commodity']]
-    # creating columns- 'energy' and 'units' from column 'commodity'
-    structured_df['energy'] = [fuel.split(' ')[0] for fuel in structured_df['commodity']]
-    structured_df['units'] = [metric.split(' ')[1].replace('(', '').replace(')', '') for metric in structured_df['commodity']]
+    read_file = pd.read_csv(file_path, header=0, delimiter=',')
+    read_file_rename = read_file.rename(
+        columns={'Oil (m3)': 'crude_oil (m3)', 'Gas (103m3)': 'natural_gas (km3)', 'Water (m3)': 'other (m3)',
+                 'value': 'Value'}, inplace=False)
+    # un pivotizing dataframe to change rows to column i.e. change shape of dataframe by specification
+    structured_df = pd.melt(read_file_rename, id_vars=["well_name", "month"], var_name="Commodity")
+    # adding columns- 'energy' and 'units' to dataframe.
+    structured_df[['energy', 'units']] = structured_df['Commodity'].str.split('(', expand=True)
+    structured_df['units'] = structured_df['units'].str.replace('[)]', '', regex=True)
+
     return print(structured_df)
 
 
