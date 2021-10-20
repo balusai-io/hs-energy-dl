@@ -6,24 +6,22 @@ import json
 from datetime import date as dt
 load_dotenv()
 
-url = "https://www.cnlopb.ca/information/statistics/#rm"
 
-response = requests.get(url)
-
-soup = BeautifulSoup(response.text, 'html.parser')
-
-links = soup.find_all('a')
 folder_filter = json.loads(os.getenv('FIELDS'))
-folders = list(folder_filter.keys())
+
 parent_path = os.getenv('BASE_DATA_PATH')
 answer = os.getenv('ALL_YEARS')
 
-todays_date = dt.today()
-present_year = todays_date.year
-links_curr_year = soup.find_all('a', text=present_year)
 
-
-def pdffile_download(parent_path):
+def pdffile_download(parent_path, folder_filter, answer):
+    url = "https://www.cnlopb.ca/information/statistics/#rm"
+    response = requests.get(url)
+    soup = BeautifulSoup(response.text, 'html.parser')
+    links = soup.find_all('a')
+    folders = list(folder_filter.keys())
+    todays_date = dt.today()
+    present_year = todays_date.year
+    links_curr_year = soup.find_all('a', text=present_year)
     # Setting the current working directory
     os.chdir(parent_path)
 
@@ -71,6 +69,6 @@ def pdffile_download(parent_path):
             os.chdir(parent_path)
 
 
-pdffile_download(parent_path)
+pdffile_download(parent_path, folder_filter, answer)
 # To show all files are downloaded.
 print("All PDF files downloaded")
