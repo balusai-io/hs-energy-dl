@@ -12,19 +12,28 @@ folder_path = os.getenv('BASE_DATA_PATH')
 
 def pre_cleaning(new_tables):
     if len(new_tables.columns) == 7:
-        new_tables.set_index('Total').filter(like='Yearly', axis=0)
-        new_tables = new_tables.drop('Total', axis=1)
+        try:
+            new_tables.set_index('Total').filter(like='Yearly', axis=0)
+            new_tables = new_tables.drop('Total', axis=1)
+        except Exception as e:
+            logger.error(e)
     else:
-        new_tables = new_tables[~new_tables['Month'].str.contains("Yearly")]
+        try:
+            new_tables = new_tables[~new_tables['Month'].str.contains("Yearly")]
+        except Exception as e:
+            logger.error(e)
     return new_tables
 
 
 def final_cleaning(sample_df):
     sample_df = sample_df.replace('', np.NaN)
-    for columns in ['Well Name', 'Year', 'Month']:
-        sample_df[columns] = sample_df[columns].fillna(method='ffill')
-        dropped_null = sample_df.dropna()
-    return dropped_null
+    try:
+        for columns in ['Well Name', 'Year', 'Month']:
+            sample_df[columns] = sample_df[columns].fillna(method='ffill')
+            dropped_null = sample_df.dropna()
+        return dropped_null
+    except Exception as e:
+        logger.error(e)
 
 
 def extraction(folder_path):
@@ -38,18 +47,27 @@ def extraction(folder_path):
                 temp_df = tables[table].df
                 column_len = len(temp_df.columns)
                 if column_len == 6:
-                    temp_df.columns = ['Well Name', 'Year', 'Month', 'Oil_(m³)', 'Gas_(10³m³)', 'Water_(m³)']
-                    all_tables = pd.concat([all_tables, temp_df])
-                    all_tables = all_tables[~all_tables['Well Name'].str.contains('Well Name')]
+                    try:
+                        temp_df.columns = ['Well Name', 'Year', 'Month', 'Oil_(m³)', 'Gas_(10³m³)', 'Water_(m³)']
+                        all_tables = pd.concat([all_tables, temp_df])
+                        all_tables = all_tables[~all_tables['Well Name'].str.contains('Well Name')]
+                    except Exception as e:
+                        logger.error(e)
                 elif column_len == 5:
-                    temp_df['Well Name'] = np.NAN
-                    temp_df.columns = ['Well Name', 'Year', 'Month', 'Oil_(m³)', 'Gas_(10³m³)', 'Water_(m³)']
-                    all_tables = pd.concat([all_tables, temp_df])
-                    all_tables = all_tables[~all_tables['Well Name'].str.contains('Well Name')]
+                    try:
+                        temp_df['Well Name'] = np.NAN
+                        temp_df.columns = ['Well Name', 'Year', 'Month', 'Oil_(m³)', 'Gas_(10³m³)', 'Water_(m³)']
+                        all_tables = pd.concat([all_tables, temp_df])
+                        all_tables = all_tables[~all_tables['Well Name'].str.contains('Well Name')]
+                    except Exception as e:
+                        logger.error(e)
                 else:
-                    temp_df.columns = ['Well Name', 'Year', 'Month', 'Total', 'Oil_(m³)', 'Gas_(10³m³)', 'Water_(m³)']
-                    all_tables = pd.concat([all_tables, temp_df])
-                    all_tables = all_tables[~all_tables['Well Name'].str.contains('Well Name')]
+                    try:
+                        temp_df.columns = ['Well Name', 'Year', 'Month', 'Total', 'Oil_(m³)', 'Gas_(10³m³)', 'Water_(m³)']
+                        all_tables = pd.concat([all_tables, temp_df])
+                        all_tables = all_tables[~all_tables['Well Name'].str.contains('Well Name')]
+                    except Exception as e:
+                        logger.error(e)
             pre_cleaning_data = pre_cleaning(all_tables)
             final_cleaning_data = final_cleaning(pre_cleaning_data)
             final_cleaning_data['Month'] = '01'+ '-'+ final_cleaning_data['Month'] + '-' + final_cleaning_data['Year']
