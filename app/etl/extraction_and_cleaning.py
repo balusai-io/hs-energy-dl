@@ -37,6 +37,7 @@ def final_cleaning(sample_df):
 
 
 def extraction(folder_path):
+    final_data = pd.DataFrame()
     for path, dirs, files in os.walk(folder_path):
         for file in files:
             filename = os.path.join(path, file)
@@ -74,10 +75,10 @@ def extraction(folder_path):
             final_cleaning_data = final_cleaning_data[~final_cleaning_data['Month'].str.contains("Yearly")]
             final_cleaning_data['Month'] = pd.to_datetime(final_cleaning_data[['Month', 'Year']].assign(DAY=1))
             final_cleaning_data = final_cleaning_data.drop(columns='Year', axis=1)
-            print(final_cleaning_data)
-            final_cleaning_data.to_csv(r'C:\Users\DHEERAJ\PycharmProjects\hs-energy-dl\data\csv_file.csv', header=True)
-
-    return final_cleaning_data
+            cleaning_data = final_cleaning_data
+            print(cleaning_data)
+            final_data = pd.concat([final_data, cleaning_data])
+    return final_data.to_csv(r'C:\Users\DHEERAJ\PycharmProjects\hs-energy-dl\data\csv_file.csv', header=True)
 
 
 extraction(folder_path)
