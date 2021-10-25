@@ -43,6 +43,7 @@ def extraction(folder_path):
             tables = camelot.read_pdf(filename, pages='all', flavor='stream', edge_tol=1000)
             table_number = tables.n
             all_tables = pd.DataFrame()
+
             for table in range(table_number):
                 temp_df = tables[table].df
                 column_len = len(temp_df.columns)
@@ -70,7 +71,8 @@ def extraction(folder_path):
                         logger.error(e)
             pre_cleaning_data = pre_cleaning(all_tables)
             final_cleaning_data = final_cleaning(pre_cleaning_data)
-            final_cleaning_data['Month'] = '01'+ '-'+ final_cleaning_data['Month'] + '-' + final_cleaning_data['Year']
+            final_cleaning_data = final_cleaning_data[~final_cleaning_data['Month'].str.contains("Yearly")]
+            final_cleaning_data['Month'] = pd.to_datetime(final_cleaning_data[['Month', 'Year']].assign(DAY=1))
             final_cleaning_data = final_cleaning_data.drop(columns='Year', axis=1)
             print(final_cleaning_data)
             final_cleaning_data.to_csv(r'C:\Users\DHEERAJ\PycharmProjects\hs-energy-dl\data\csv_file.csv', header=True)
