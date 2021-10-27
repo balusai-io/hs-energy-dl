@@ -24,7 +24,6 @@ def pdffile_download(parent_path, folder_filter, answer):
     links_curr_year = soup.find_all('a', text=present_year)
     # Setting the current working directory
     os.chdir(parent_path)
-
     for folder in folders:
         curr_folder_path = parent_path + '\\' + folder
 
