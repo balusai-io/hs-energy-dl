@@ -21,10 +21,10 @@ def file_processing(file_path, units_table, product_table):
         # calling Id's corresponding to attributes in unit and product id columns.
         structured_df['energy_product_id'] = structured_df.energy.str.lower().map(product_table.set_index('energy_product')['ID'])
         structured_df['energy_unit_id'] = structured_df.units.str.lower().map(units_table.set_index('uom')['unit_of_measure_id'])
-        structured_df['well_id'] = structured_df.well_name.map(wells_table.set_index('well_name')['ID'])
+        structured_df['well_id'] = structured_df.well_name.map(wells_table.set_index('well_name')['ID'].astype('string'))
         structured_df['date_created'] = structured_df.well_name.map(wells_table.set_index('well_name')['date_created'])
-        structured_df = structured_df.drop(['energy', 'units', 'Commodity'], axis=1)
-        # structured_df = structured_df.drop(['energy', 'units', 'Commodity', 'well_name'], axis=1)
+        # structured_df = structured_df.drop(['energy', 'units', 'Commodity'], axis=1)
+        structured_df = structured_df.drop(['energy', 'units', 'Commodity', 'well_name'], axis=1)
 
         print(structured_df)
         structured_df.to_csv(r'C:\Users\DHEERAJ\PycharmProjects\hs-energy-dl\output_file.csv', index=False)
