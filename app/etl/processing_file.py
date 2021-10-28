@@ -5,6 +5,8 @@ logger = init_logger()
 
 units_table = pd.read_csv(r'C:\Users\DHEERAJ\PycharmProjects\hs-energy-dl\tbl_unit.csv', header=0, sep=',')
 product_table = pd.read_csv(r'C:\Users\DHEERAJ\PycharmProjects\hs-energy-dl\energy_product.csv', header=0, sep=',')
+fields_table = pd.read_csv(r'C:\Users\DHEERAJ\PycharmProjects\hs-energy-dl\tbl_cnlopb_fields.csv', header=0, sep=',')
+wells_table = pd.read_csv(r'C:\Users\DHEERAJ\PycharmProjects\hs-energy-dl\tbl_cnlopb_wells.csv', header=0, sep=',')
 
 
 def file_processing(file_path, units_table, product_table):
@@ -16,11 +18,16 @@ def file_processing(file_path, units_table, product_table):
         # adding columns- 'energy' and 'units' to dataframe.
         structured_df[['energy', 'units']] = structured_df['Commodity'].str.split('(', expand=True)
         structured_df['units'] = structured_df['units'].str.replace('[)]', '', regex=True)
-        # calling Id's corresponding to attributes in unit and product id columns
+        # calling Id's corresponding to attributes in unit and product id columns.
         structured_df['energy_product_id'] = structured_df.energy.str.lower().map(product_table.set_index('energy_product')['ID'])
         structured_df['energy_unit_id'] = structured_df.units.str.lower().map(units_table.set_index('uom')['unit_of_measure_id'])
-        structured_df = structured_df.drop(['energy', 'units', 'Commodity'], axis=1)
+        structured_df['well_id'] = structured_df.well_name.map(wells_table.set_index('well_name')['ID'])
+        structured_df['date_created'] = structured_df.well_name.map(wells_table.set_index('well_name')['date_created'])
+        # structured_df = structured_df.drop(['energy', 'units', 'Commodity'], axis=1)
+        structured_df = structured_df.drop(['energy', 'units', 'Commodity', 'well_name'], axis=1)
+
         print(structured_df)
+        structured_df.to_csv(r'C:\Users\DHEERAJ\PycharmProjects\hs-energy-dl\output_file.csv', index=False)
         return structured_df
     except Exception as e:
         logger.error(e)
