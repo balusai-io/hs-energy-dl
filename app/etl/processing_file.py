@@ -27,7 +27,7 @@ def file_processing(file_path, units_table, product_table):
         structured_df = structured_df.drop(['energy', 'units', 'Commodity', 'well_name'], axis=1)
 
         print(structured_df)
-        structured_df.to_csv(r'C:\Users\DHEERAJ\PycharmProjects\hs-energy-dl\output_file.csv', index=False)
+        # structured_df.to_csv(r'C:\Users\DHEERAJ\PycharmProjects\hs-energy-dl\output_file.csv', index=False)
         return structured_df
     except Exception as e:
         logger.error(e)
