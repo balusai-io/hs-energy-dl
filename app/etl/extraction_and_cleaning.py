@@ -78,7 +78,7 @@ def extraction(folder_path):
             cleaning_data = final_cleaning_data
             print(cleaning_data)
             final_data = pd.concat([final_data, cleaning_data])
-    return final_data.to_csv(r'C:\Users\DHEERAJ\PycharmProjects\hs-energy-dl\data\csv_file.csv', header=True)
+    return final_data.to_csv('C:/Users/DHEERAJ/PycharmProjects/hs-energy-dl/data/csv_file.csv', header=True, index=False)
 
 
 extraction(folder_path)
