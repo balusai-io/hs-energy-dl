@@ -29,4 +29,4 @@ def file_processing(file_path, units_table, product_table):
         logger.error(e)
 
 
-file_processing('C:/Users/DHEERAJ/PycharmProjects/hs-energy-dl/csv_file.csv', units_table, product_table)
+file_processing('C:/Users/DHEERAJ/PycharmProjects/hs-energy-dl/data/csv_file.csv', units_table, product_table)
