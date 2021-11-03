@@ -3,7 +3,11 @@ from dotenv import load_dotenv
 import camelot
 import pandas as pd
 import numpy as np
+import json
 from app.utils.logging_init import init_logger
+from app.etl import lookup_tables
+from app.etl import processing_file
+
 load_dotenv()
 
 logger = init_logger()
@@ -36,10 +40,11 @@ def final_cleaning(sample_df):
         logger.error(e)
 
 
-def extraction(folder_path):
+def extraction(folder_path, field):
     final_data = pd.DataFrame()
-    for path, dirs, files in os.walk(folder_path):
+    for path, dirs, files in os.walk(f"{folder_path}/{field}"):
         for file in files:
+            logger.info(f"extracting {file}")
             filename = os.path.join(path, file)
             tables = camelot.read_pdf(filename, pages='all', flavor='stream', edge_tol=1000)
             table_number = tables.n
@@ -76,9 +81,22 @@ def extraction(folder_path):
             final_cleaning_data['Month'] = pd.to_datetime(final_cleaning_data[['Month', 'Year']].assign(DAY=1))
             final_cleaning_data = final_cleaning_data.drop(columns='Year', axis=1)
             cleaning_data = final_cleaning_data
-            print(cleaning_data)
             final_data = pd.concat([final_data, cleaning_data])
-    return final_data.to_csv('C:/Users/DHEERAJ/PycharmProjects/hs-energy-dl/data/csv_file.csv', header=True, index=False)
+    return final_data
 
 
-extraction(folder_path)
+if __name__ == '__main__':
+    clean_df = pd.DataFrame()
+    fields_dict = json.loads(os.getenv('FIELDS'))
+    fields = list(fields_dict.keys())
+    for field in fields:
+        extracting_and_cleaning = extraction(folder_path, field)
+        lookup_tables.update_fields_table(field)
+        clean_df = pd.concat([clean_df, extracting_and_cleaning])
+    # ned to create weel lookup table
+    processing_file.file_processing(clean_df)
+
+
+    # for field in fields:
+    #     extracting_and_cleaning = extraction(folder_path, field)
+    #     lookup_tables.update_fields_table(field)

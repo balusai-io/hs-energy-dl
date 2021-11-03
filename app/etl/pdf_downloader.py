@@ -34,45 +34,47 @@ def pdffile_download(parent_path, folder_filter, answer):
         if answer == 'yes':
             folder_filter_curr = folder_filter[folder]
             # To display respective folder where related files going to download
-            print("In Folder:", folder)
+            logger.info(f"In Folder: {folder}")
             i = 0
             try:
                 for link in links:
                     if folder_filter_curr in link.get('href', []):
                         i += 1
                         # To display downloading file number
-                        print("Downloading file: ", i)
+                        logger.info(f"Downloading file:  {i}")
                         response_page = requests.get(link.get('href'))
                         name = link.get('href').split('/')[-1]
                         pdf = open(name, 'wb')
                         pdf.write(response_page.content)
                         pdf.close()
                         # To display specific file is downloaded
-                        print("File ", i, " downloaded")
+                        logger.info(f"File {i} downloaded")
                 os.chdir(parent_path)
             except Exception as e:
                 logger.error(e)
         else:
             try:
                 folder_filter_curr = folder_filter[folder]
-                print("In Folder:", folder)
+                logger.info(f"In Folder: {folder}")
                 i = 0
                 for link in links_curr_year:
                     if folder_filter_curr in link.get('href', []):
                         i += 1
                         # To display downloading file number
-                        print("Downloading file: ", i)
+                        logger.info(f"Downloading file: {i}")
                         response_page = requests.get(link.get('href'))
                         name = link.get('href').split('/')[-1]
                         pdf = open(name, 'wb')
                         pdf.write(response_page.content)
                         pdf.close()
                         # To display specific file is downloaded
-                        print("File ", i, " downloaded")
+                        logger.info(f"File {i} downloaded")
                 os.chdir(parent_path)
             except Exception as e:
                 logger.error(e)
 
-pdffile_download(parent_path, folder_filter, answer)
-# To show all files are downloaded.
-print("All PDF files downloaded")
+
+if __name__ == '__main__':
+    pdffile_download(parent_path, folder_filter, answer)
+    # To show all files are downloaded.
+    logger.info(f"All PDF files downloaded")
