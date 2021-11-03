@@ -23,13 +23,13 @@ file_path = r'C:/Users/DHEERAJ/PycharmProjects/hs-energy-dl/csv_file.csv'
 
 def data_loader():
     pdffile_download(parent_path, folder_filter, answer)
-    fields = json.loads(os.getenv('FIELDS').keys)
+    fields = list(json.loads(os.getenv('FIELDS')).keys())
     for field in fields:
         extracting_and_cleaning = extraction(folder_path, field)
         lookup_tables.update_fields_table(field)
     # fieldsdb_df = lookup_tables.fieldsdb_df()
     file_transformation = file_processing(extracting_and_cleaning)
-    print(file_transformation)
+    logger.info(file_transformation)
 
 
 if __name__ == '__main__':

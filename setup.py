@@ -1,11 +1,10 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
 setup(
-    name='Data_loading_package',
+    name='data_loading_package',
     version='1.0.0',
-    packages=['app', 'app.etl', 'app.utils'],
-    url='',
-    license='',
+    url='https://github.com/balusai-itv/hs-energy-dl.git',
+    packages=find_packages(),
     author='ITVERSITY',
     author_email='dheeraj.pasupuleti@itversity.in',
     description='Scrapping and Data loading of energy field resources data in monthly interval into database',
@@ -16,5 +15,15 @@ setup(
         'SQLAlchemy==1.4.23',
         'python-dotenv>=0.5.1',
         'numpy==1.21.1',
-    ]
+        'bs4==0.0.1',
+        'requests==2.26.0',
+    ],
+    package_data={'': ['*']},
+    entry_points={
+        'console_scripts': [
+            'hs_dl = app.energy_dl_main:main',
+        ],
+    },
+    extras_require={},
+    zip_safe=False,
 )
