@@ -26,8 +26,13 @@ def data_loader():
     fields = list(json.loads(os.getenv('FIELDS')).keys())
     for field in fields:
         extracting_and_cleaning = extraction(folder_path, field)
+        extracting_and_cleaning['Field Name'] = field
         lookup_tables.update_fields_table(field)
+        well_df = extracting_and_cleaning[['Well Name', 'Field Name']]
+
+        lookup_tables.update_well_lookup_table(well_df, field)
     # fieldsdb_df = lookup_tables.fieldsdb_df()
+    extracting_and_cleaning = extracting_and_cleaning.drop(columns=['Field Name'])
     file_transformation = file_processing(extracting_and_cleaning)
     logger.info(file_transformation)
 

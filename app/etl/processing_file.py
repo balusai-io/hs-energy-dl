@@ -22,6 +22,7 @@ def file_processing(clean_df):
         # calling Id's corresponding to attributes in unit and product id columns.
         structured_df['energy_product_id'] = structured_df.energy.str.lower().map(energy_product_table.set_index('energy_product')['id'])
         structured_df['energy_unit_id'] = structured_df.units.str.lower().map(units_table.set_index('uom')['unit_of_measure_id'])
+        # Map well_name with well_id and remove well_name column
         structured_df = structured_df.drop(['energy', 'units', 'Commodity'], axis=1)
         print(structured_df)
         structured_df.to_csv('/tmp/output_file.csv', index=False)
