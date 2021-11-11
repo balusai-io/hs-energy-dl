@@ -6,6 +6,28 @@ import sqlalchemy
 logger = init_logger()
 
 
+def production_update_table(structured_df):
+    #updating production lookup table
+    try:
+        structured_df.to_sql(
+            'tbl_cnlopb_wells',
+            con=conn,
+            if_exists='append',
+            method='multi',
+            index=False,
+            schema='collections',
+            dtype={"well_id": sqlalchemy.types.INT,
+                   "energy_product_id": sqlalchemy.types.INT,
+                   "unit_of_measure_id": sqlalchemy.types.INT,
+                   "month": sqlalchemy.types.DATE,
+                   "value": sqlalchemy.types.INT,
+                   "field_id": sqlalchemy.types.CHAR(length=5)
+                   }
+        )
+    except Exception as e:
+        logger.error(e)
+
+
 def update_well_lookup_table(well_names, field):
     # Updating well lookup table
     try:
@@ -133,3 +155,5 @@ def get_unitof_measure():
     except Exception as e:
         logger.error(e)
     return tbl_uom_df
+
+
