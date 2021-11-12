@@ -1,7 +1,7 @@
 import pandas as pd
 from app.utils.logging_init import init_logger
 from app.etl import lookup_tables
-
+from app.etl.extraction_and_cleaning import extraction
 
 logger = init_logger()
 
