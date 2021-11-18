@@ -9,8 +9,9 @@ logger = init_logger()
 def production_update_table(structured_df):
     #updating production lookup table
     try:
+        conn = dbconnection.db_connection()
         structured_df.to_sql(
-            'tbl_cnlopb_wells',
+            'tbl_cnlopb_production',
             con=conn,
             if_exists='append',
             method='multi',
