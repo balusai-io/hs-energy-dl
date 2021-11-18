@@ -1,8 +1,8 @@
-from app.etl import development
+from app.etl import dataloader_main
 
 
 def main():
-    development.data_loader()
+    dataloader_main.data_loader()
 
 
 if __name__ == '__main__':

@@ -40,7 +40,7 @@ def final_cleaning(sample_df):
         logger.error(e)
 
 
-def extraction(folder_path, field):
+def extraction_data(folder_path, field):
     final_data = pd.DataFrame()
     for path, dirs, files in os.walk(f"{folder_path}/{field}"):
         for file in files:
@@ -83,20 +83,3 @@ def extraction(folder_path, field):
             cleaning_data = final_cleaning_data
             final_data = pd.concat([final_data, cleaning_data])
     return final_data
-
-
-if __name__ == '__main__':
-    clean_df = pd.DataFrame()
-    fields_dict = json.loads(os.getenv('FIELDS'))
-    fields = list(fields_dict.keys())
-    for field in fields:
-        extracting_and_cleaning = extraction(folder_path, field)
-        lookup_tables.update_fields_table(field)
-        clean_df = pd.concat([clean_df, extracting_and_cleaning])
-    # ned to create weel lookup table
-    processing_file.file_processing(clean_df)
-
-
-    # for field in fields:
-    #     extracting_and_cleaning = extraction(folder_path, field)
-    #     lookup_tables.update_fields_table(field)
