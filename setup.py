@@ -14,7 +14,7 @@ setup(
         'psycopg2-binary==2.9.1',
         'SQLAlchemy==1.4.23',
         'python-dotenv>=0.5.1',
-        'numpy==1.21.1',
+        'numpy==1.22',
         'bs4==0.0.1',
         'requests==2.26.0',
     ],
